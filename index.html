@@ -2,97 +2,45 @@
 <html lang="es">
 <head>
   <meta charset="utf-8">
-  <title>MindAR Video AR</title>
+  <title>MindAR Clean</title>
 
-  <!-- A-Frame -->
   <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
-  <!-- MindAR -->
   <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
 
   <style>
-    body {
+    html, body {
       margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
       overflow: hidden;
-    }
-
-    /* Pantalla de inicio */
-    #start {
-      position: fixed;
-      inset: 0;
-      z-index: 10;
       background: black;
-      color: white;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-size: 22px;
-      text-align: center;
     }
   </style>
 </head>
 
 <body>
 
-  <!-- BOTÓN DE INICIO -->
-  <div id="start" onclick="startAR()">
-    TOCA PARA INICIAR AR
-  </div>
+<a-scene
+  mindar-image="imageTargetSrc: targets.mind;"
+  embedded
+  vr-mode-ui="enabled: false"
+  device-orientation-permission-ui="enabled: false">
 
-  <!-- ESCENA AR -->
-  <a-scene
-    mindar-image="imageTargetSrc: targets.mind;"
-    embedded
-    vr-mode-ui="enabled: false"
-    device-orientation-permission-ui="enabled: true">
+  <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
-    <!-- ASSETS -->
-    <a-assets>
-      <!-- Usa un video ligero, MP4, sin audio -->
-      <video
-        id="vid"
-        src="video2.mp4"
-        loop
-        muted
-        playsinline
-        webkit-playsinline>
-      </video>
-    </a-assets>
+  <a-entity mindar-image-target="targetIndex: 0">
+    <a-box
+      color="red"
+      depth="0.3"
+      height="0.3"
+      width="0.3"
+      position="0 0 0.2">
+    </a-box>
+  </a-entity>
 
-    <!-- CÁMARA -->
-    <a-camera position="0 0 0"></a-camera>
-
-    <!-- TARGET 0 -->
-    <a-entity mindar-image-target="targetIndex: 0">
-      <a-video
-        geometry="primitive:box"
-        material="color: red"
-        scale="0.5 0.5 0.5"
-        position="0 0 0.2"
-        rotation="0 0 0">
-      </a-video>
-    </a-entity>
-
-  </a-scene>
-
-  <!-- SCRIPT -->
-  <script>
-    function startAR() {
-      // elimina por completo el overlay
-      const start = document.getElementById('start');
-      if (start) start.remove();
-
-      // fuerza reproducción del video
-      const video = document.getElementById('vid');
-      if (video) {
-        video.play().catch(() => {
-          console.log("El navegador bloqueó el autoplay, pero AR sigue activo");
-        });
-      }
-    }
-  </script>
+</a-scene>
 
 </body>
 </html>
-
-
 
