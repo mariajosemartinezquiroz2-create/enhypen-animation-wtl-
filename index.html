@@ -22,6 +22,17 @@
 <body>
 
 <a-scene
+  <a-assets>
+  <video
+    id="vid"
+    src="video2.mp4"
+    preload="auto"
+    playsinline
+    muted
+    loop
+    crossorigin="anonymous">
+  </video>
+</a-assets>
   mindar-image="imageTargetSrc: targets.mind;"
   embedded
   vr-mode-ui="enabled: false"
@@ -30,17 +41,24 @@
   <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
   <a-entity mindar-image-target="targetIndex: 0">
-    <a-box
-      color="red"
-      depth="0.3"
-      height="0.3"
-      width="0.3"
-      position="0 0 0.2">
-    </a-box>
+    <a-video
+  src="#vid"
+  width="1"
+  height="0.56"
+  position="0 0 0.2">
+</a-video>
+
   </a-entity>
 
 </a-scene>
-
+<script>
+  const scene = document.querySelector('a-scene');
+  scene.addEventListener('targetFound', () => {
+    const video = document.getElementById('vid');
+    if (video) video.play();
+  });
+</script>
 </body>
 </html>
+
 
