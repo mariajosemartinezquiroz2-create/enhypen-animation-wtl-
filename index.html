@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Cargamos MindAR y A-Frame -->
+    <script src="https://aframe.io"></script>
+    <script src="https://cdn.jsdelivr.net"></script>
+    
+    <!-- Este script es el "borrador" de fondo verde -->
+    <script>
+      AFRAME.registerShader('chromakey', {
+        schema: {
+          src: {type: 'map'},
+          color: {default: {x: 0.1, y: 1.0, z: 0.1}, type: 'vec3', is: 'uniform'}
+        },
+        vertexShader: `
+          varying vec2 vUv;
+          void main() {
+            vUv = uv;
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+          }
+        `,
+        fragmentShader: `
+          uniform sampler2D src;
+          uniform vec3 color;
+          varying vec2 vUv;
+          void main() {
+            vec4 tColor = texture2D(src, vUv);
+            float d = distance(tColor.rgb, color);
+            if (d < 0.4) { discard; } else { gl_FragColor = tColor; }
+          }
+        `
+      });
+    </script>
+  </head>
+  <body>
+    <a-scene mindar-image="imageTargetSrc: ./card.mind;" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
+      <a-assets>
+        <video id="vid" src="video.mp4" loop="true" crossorigin="anonymous" muted playsinline></video>
+      </a-assets>
+
+      <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+
+      
+        <!-- Aquí aplicamos el shader chromakey para la transparencia -->
+        <a-video src="#vid" width="1" height="1.5" material="shader: chromakey;"></a-video>
+      
+    </a-scene>
+
+    <div style="position: fixed; top: 10px; width: 100%; text-align: center; z-index: 999;">
+        <button id="playBtn" style="padding: 10px; background: #fff;">Toca para activar a ENHYPEN</button>
+    </div>
+
+    <script>
+      const btn = document.querySelector('#playBtn');
+      const video = document.querySelector('#vid');
+      btn.addEventListener('click', () => {
+        video.play();
+        btn.style.display = 'none'; // Oculta el botón al iniciar
+      });
+    </script>
+  </body>
+</html>
